@@ -5,5 +5,5 @@ metadata:
 spec:
   forProvider:
     name: cp-{{ .Values.stage }}-{{ .Values.region }}
-    description: A project to represent test resources via Crossplane
+    description: A project to represent test resources via CrossPlane
     environment: development2
