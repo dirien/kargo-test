@@ -3,7 +3,7 @@ apiVersion: v2
 dependencies:
 - name: infra-chart
   version: 0.1.0
-  repository: https://dirien.github.io/kargo-test
+  repository: https://dirien.github.io/kargo-test/
 
 name: infrastructure
 
