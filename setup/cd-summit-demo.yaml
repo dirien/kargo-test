@@ -1,0 +1,51 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  name: cd-summit-demo
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: infra-chart-warehouse
+  namespace: cd-summit-demo
+spec:
+  freightCreationPolicy: Automatic
+  interval: 30s
+  subscriptions:
+  - chart:
+      discoveryLimit: 20
+      name: infra-chart
+      repoURL: https://dirien.github.io/kargo-test
+  #- git:
+  #    commitSelectionStrategy: NewestFromBranch
+  #    discoveryLimit: 20
+  #    excludePaths:
+  #    - charts
+  #    - setup
+  #    - .github
+  #    repoURL: https://github.com/dirien/kargo-test
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test
+  namespace: cd-summit-demo
+spec:
+  promotionMechanisms:
+    argoCDAppUpdates:
+    - appName: cd-summit-demo-test
+      appNamespace: argocd
+    gitRepoUpdates:
+    - helm:
+        charts:
+        - chartPath: stages/test
+          name: infra-chart
+          repository: https://dirien.github.io/kargo-test
+      repoURL: https://github.com/dirien/kargo-test
+      writeBranch: main
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: infra-chart-warehouse
+    sources:
+      direct: true
