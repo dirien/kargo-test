@@ -1,3 +1,8 @@
 infra-chart:
   region: ams3
   stage: prod
+  iac:
+    pulumi:
+      enabled: true
+    crossplane:
+      enabled: false
