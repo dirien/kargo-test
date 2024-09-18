@@ -15,7 +15,7 @@ spec:
   - chart:
       discoveryLimit: 20
       name: infra-chart
-      repoURL: https://dirien.github.io/kargo-test/
+      repoURL: https://dirien.github.io/kargo-test
   #- git:
   #    commitSelectionStrategy: NewestFromBranch
   #    discoveryLimit: 20
@@ -40,7 +40,7 @@ spec:
         charts:
         - chartPath: stages/test
           name: infra-chart
-          repository: https://dirien.github.io/kargo-test/
+          repository: https://dirien.github.io/kargo-test
       repoURL: https://github.com/dirien/kargo-test
       writeBranch: main
   requestedFreight:
