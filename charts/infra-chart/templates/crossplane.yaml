@@ -13,6 +13,6 @@ spec:
         instanceCount: 1
         instanceSizeSlug: "apps-s-1vcpu-1gb"
         git:
-        - repoCloneUrl: "https://github.com/digitalocean/sample-golang.git"
+        - repoCloneUrl: {{ .Values.app.repo }}
           branch: "main"
 {{- end }}

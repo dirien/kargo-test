@@ -5,3 +5,5 @@ iac:
     enabled: true
   crossplane:
     enabled: true
+app:
+  repo: https://github.com/digitalocean/sample-golang.git

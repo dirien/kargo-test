@@ -4,6 +4,9 @@ metadata:
   name: cd-summit-demo
   namespace: argocd
 spec:
+  ignoreApplicationDifferences:
+  - jqPathExpressions:
+    - .spec.sources[].targetRevision
   generators:
   - git:
       repoURL: https://github.com/dirien/kargo-test
@@ -17,16 +20,13 @@ spec:
         kargo.akuity.io/authorized-stage: cd-summit-demo:*
     spec:
       project: default
-      sources:
-      - repoURL: https://github.com/dirien/kargo-test
+      source:
+        repoURL: https://github.com/dirien/kargo-test
         targetRevision: main
         path: stages/{{path.basename}}
         helm:
           valueFiles:
-          - $values/stages/{{path.basename}}/values.yaml
-      - repoURL: https://github.com/dirien/kargo-test
-        targetRevision: main
-        ref: values
+          - values.yaml
       destination:
         server: https://kubernetes.default.svc
         namespace: default #cd-summit-demo-{{path.basename}}
