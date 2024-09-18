@@ -1,20 +1,20 @@
 apiVersion: pulumi.com/v1
 kind: Program
 metadata:
-  name: pu-program-{{ .Values.stage }}-{{ .Values.region }}
+  name: test-program
 program:
   resources:
     do_project:
       properties:
         description: A project to represent test resources via Pulumi
         environment: development2
-        name: pu-{{ .Values.stage }}-{{ .Values.region }}
+        name: test-stage
       type: digitalocean:Project
 ---
 apiVersion: pulumi.com/v1
 kind: Stack
 metadata:
-  name: pu-stack-{{ .Values.stage }}-{{ .Values.region }}
+  name: test-stack
 spec:
   destroyOnFinalize: true
   envRefs:
@@ -23,5 +23,5 @@ spec:
         name: DIGITALOCEAN_TOKEN
       type: Env
   programRef:
-    name: pu-program-{{ .Values.stage }}-{{ .Values.region }}
-  stack: ediri/pu-program-{{ .Values.stage }}-{{ .Values.region }}/{{ .Values.stage }}
+    name: test-program
+  stack: ediri/test-program/test
