@@ -1,0 +1,27 @@
+apiVersion: pulumi.com/v1
+kind: Program
+metadata:
+  name: test-program
+program:
+  resources:
+    do_project:
+      properties:
+        description: A project to represent test resources.
+        environment: development2
+        name: test-stage
+      type: digitalocean:Project
+---
+apiVersion: pulumi.com/v1
+kind: Stack
+metadata:
+  name: test-stack
+spec:
+  destroyOnFinalize: true
+  envRefs:
+    DIGITALOCEAN_TOKEN:
+      env:
+        name: DIGITALOCEAN_TOKEN
+      type: Env
+  programRef:
+    name: test-program
+  stack: ediri/test-program/test

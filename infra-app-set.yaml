@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kargo-test
+  namespace: argocd
+spec:
+  generators:
+  - list:
+      elements:
+      - stage: test
+      - stage: uat-a
+      - stage: uat-b
+      - stage: prod
+  template:
+    metadata:
+      name: iac-demo-{{stage}}
+      annotations:
+        kargo.akuity.io/authorized-stage: iac-demo:{{stage}}
+    spec:
+      project: default
+      source:
+        chart: infrastructure
+        helm:
+          passCredentials: true
+        repoURL: https://github.com/dirien/kargo-test
+        targetRevision: 0.1.0
+        path: stages/{{stage}}
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
