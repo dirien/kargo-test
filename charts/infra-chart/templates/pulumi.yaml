@@ -5,12 +5,19 @@ metadata:
   name: pu-program-{{ .Values.stage }}-{{ .Values.region }}
 program:
   resources:
-    spacesBucket:
-      type: digitalocean:SpacesBucket
+    golang-sample:
+      type: digitalocean:App
       properties:
-        name: pu-space-{{ .Values.stage }}-{{ .Values.region }}
-        region: {{ .Values.region }}
-
+        spec:
+          name: golang-sample-{{ .Values.stage }}-{{ .Values.region }}
+          region: {{ .Values.region }}
+          services:
+          - name: go-service-{{ .Values.stage }}-{{ .Values.region }}
+            instanceCount: 1
+            instanceSizeSlug: "apps-s-1vcpu-1gb"
+            git:
+              repoCloneUrl: "https://github.com/digitalocean/sample-golang.git"
+              branch: "main"
 ---
 apiVersion: pulumi.com/v1
 kind: Stack

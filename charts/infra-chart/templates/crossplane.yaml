@@ -1,8 +1,18 @@
 {{- if .Values.iac.crossplane.enabled }}
-apiVersion: spaces.digitalocean.crossplane.io/v1alpha1
-kind: BucketObject
+apiVersion: digitalocean.digitalocean.crossplane.io/v1alpha1
+kind: App
+metadata:
+  name: golang-sample-{{ .Values.stage }}-{{ .Values.region }}
 spec:
   forProvider:
-    name: cp-space-{{ .Values.stage }}-{{ .Values.region }}
-    region: {{ .Values.region }}
+    spec:
+    - name: golang-sample-{{ .Values.stage }}-{{ .Values.region }}
+      region: {{ .Values.region }}
+      service:
+      - name: go-service-{{ .Values.stage }}-{{ .Values.region }}
+        instanceCount: 1
+        instanceSizeSlug: "apps-s-1vcpu-1gb"
+        git:
+        - repoCloneUrl: "https://github.com/digitalocean/sample-golang.git"
+          branch: "main"
 {{- end }}
