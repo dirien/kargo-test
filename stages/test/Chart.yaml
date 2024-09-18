@@ -6,5 +6,4 @@ dependencies:
   repository: https://dirien.github.io/kargo-test
 
 name: infrastructure
-version: 0.1.0
 
