@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: cd-summit-demo
+  name: kargo-test
   namespace: argocd
 spec:
   generators:
@@ -13,21 +13,18 @@ spec:
       - stage: prod
   template:
     metadata:
-      name: cd-summit-demo-{{stage}}
+      name: iac-demo-{{stage}}
       annotations:
-        kargo.akuity.io/authorized-stage: cd-summit-demo:{{stage}}
+        kargo.akuity.io/authorized-stage: iac-demo:{{stage}}
     spec:
       project: default
-      sources:
-        - repoURL: https://github.com/dirien/kargo-test
-          targetRevision: main
-          path: stages/{{stage}}
-          helm:
-            valueFiles:
-            - $values/stages/{{stage}}/values.yaml
-        - repoURL: https://github.com/dirien/kargo-test
-          targetRevision: main
-          ref: values
+      source:
+        chart: infrastructure
+        helm:
+          passCredentials: true
+        repoURL: https://github.com/dirien/kargo-test
+        targetRevision: 0.1.0
+        path: stages/{{stage}}
       destination:
         server: https://kubernetes.default.svc
         namespace: default
