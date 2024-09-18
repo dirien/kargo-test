@@ -5,32 +5,31 @@ metadata:
   namespace: argocd
 spec:
   generators:
-  - list:
-      elements:
-      - stage: test
-      - stage: uat-a
-      - stage: uat-b
-      - stage: prod
+  - git:
+      repoURL: https://github.com/dirien/kargo-test
+      revision: HEAD
+      directories:
+      - path: stages/*
   template:
     metadata:
-      name: cd-summit-demo-{{stage}}
+      name: cd-summit-demo-{{path.basename}}
       annotations:
-        kargo.akuity.io/authorized-stage: cd-summit-demo:{{stage}}
+        kargo.akuity.io/authorized-stage: cd-summit-demo:*
     spec:
       project: default
       sources:
       - repoURL: https://github.com/dirien/kargo-test
         targetRevision: main
-        path: stages/{{stage}}
+        path: stages/{{path.basename}}
         helm:
           valueFiles:
-          - $values/stages/{{stage}}/values.yaml
+          - $values/stages/{{path.basename}}/values.yaml
       - repoURL: https://github.com/dirien/kargo-test
         targetRevision: main
         ref: values
       destination:
         server: https://kubernetes.default.svc
-        namespace: cd-summit-demo-{{stage}}
+        namespace: cd-summit-demo-{{path.basename}}
       syncPolicy:
         automated:
           prune: true
