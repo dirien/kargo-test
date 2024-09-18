@@ -1,0 +1,3 @@
+infra-chart:
+  region: lon1
+  stage: prod

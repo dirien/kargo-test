@@ -1,9 +1,8 @@
-apiVersion: project.digitalocean.crossplane.io/v1alpha1
-kind: Project
-metadata:
-  name: do-project-{{ .Values.stage }}-{{ .Values.region }}
+{{- if .Values.iac.crossplane.enabled }}
+apiVersion: spaces.digitalocean.crossplane.io/v1alpha1
+kind: BucketObject
 spec:
   forProvider:
-    name: cp-{{ .Values.stage }}-{{ .Values.region }}
-    description: A project to represent test resources via CrossPlane
-    environment: development2
+    name: cp-space-{{ .Values.stage }}-{{ .Values.region }}
+    region: {{ .Values.region }}
+{{- end }}

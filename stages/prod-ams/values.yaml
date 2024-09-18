@@ -1,0 +1,3 @@
+infra-chart:
+  region: ams3
+  stage: prod

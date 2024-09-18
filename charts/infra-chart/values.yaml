@@ -1,2 +1,7 @@
 region: world
 stage: dev
+iac:
+  pulumi:
+    enabled: true
+  crossplane:
+    enabled: true

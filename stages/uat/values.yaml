@@ -1,8 +1,8 @@
 infra-chart:
   region: fra1
-  stage: dev
+  stage: uat
   iac:
     pulumi:
-      enabled: true
-    crossplane:
       enabled: false
+    crossplane:
+      enabled: true

@@ -16,14 +16,6 @@ spec:
       discoveryLimit: 20
       name: infra-chart
       repoURL: https://dirien.github.io/kargo-test/
-  #- git:
-  #    commitSelectionStrategy: NewestFromBranch
-  #    discoveryLimit: 20
-  #    excludePaths:
-  #    - charts
-  #    - setup
-  #    - .github
-  #    repoURL: https://github.com/dirien/kargo-test
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
@@ -49,3 +41,107 @@ spec:
       name: infra-chart-warehouse
     sources:
       direct: true
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: uat
+  namespace: cd-summit-demo
+spec:
+  promotionMechanisms:
+    argoCDAppUpdates:
+    - appName: cd-summit-demo-uat
+      appNamespace: argocd
+    gitRepoUpdates:
+    - helm:
+        charts:
+        - chartPath: stages/uat
+          name: infra-chart
+          repository: https://dirien.github.io/kargo-test/
+      repoURL: https://github.com/dirien/kargo-test
+      writeBranch: main
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: infra-chart-warehouse
+    sources:
+      stages:
+      - test
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-nyc
+  namespace: cd-summit-demo
+spec:
+  promotionMechanisms:
+    argoCDAppUpdates:
+    - appName: cd-summit-demo-prod-nyc
+      appNamespace: argocd
+    gitRepoUpdates:
+    - helm:
+        charts:
+        - chartPath: stages/prod-nyc
+          name: infra-chart
+          repository: https://dirien.github.io/kargo-test/
+      repoURL: https://github.com/dirien/kargo-test
+      writeBranch: main
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: infra-chart-warehouse
+    sources:
+      stages:
+      - uat
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-ams
+  namespace: cd-summit-demo
+spec:
+  promotionMechanisms:
+    argoCDAppUpdates:
+    - appName: cd-summit-demo-prod-ams
+      appNamespace: argocd
+    gitRepoUpdates:
+    - helm:
+        charts:
+        - chartPath: stages/prod-ams
+          name: infra-chart
+          repository: https://dirien.github.io/kargo-test/
+      repoURL: https://github.com/dirien/kargo-test
+      writeBranch: main
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: infra-chart-warehouse
+    sources:
+      stages:
+      - prod-nyc
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-lon
+  namespace: cd-summit-demo
+spec:
+  promotionMechanisms:
+    argoCDAppUpdates:
+    - appName: cd-summit-demo-prod-lon
+      appNamespace: argocd
+    gitRepoUpdates:
+    - helm:
+        charts:
+        - chartPath: stages/prod-lon
+          name: infra-chart
+          repository: https://dirien.github.io/kargo-test/
+      repoURL: https://github.com/dirien/kargo-test
+      writeBranch: main
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: infra-chart-warehouse
+    sources:
+      stages:
+      - prod-nyc

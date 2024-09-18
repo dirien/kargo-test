@@ -1,15 +1,16 @@
+{{- if .Values.iac.pulumi.enabled }}
 apiVersion: pulumi.com/v1
 kind: Program
 metadata:
   name: pu-program-{{ .Values.stage }}-{{ .Values.region }}
 program:
   resources:
-    do_project:
+    spacesBucket:
+      type: digitalocean:SpacesBucket
       properties:
-        description: A project to represent test resources via Pulumi
-        environment: development2
-        name: pu-{{ .Values.stage }}-{{ .Values.region }}
-      type: digitalocean:Project
+        name: pu-space-{{ .Values.stage }}-{{ .Values.region }}
+        region: {{ .Values.region }}
+
 ---
 apiVersion: pulumi.com/v1
 kind: Stack
@@ -25,3 +26,4 @@ spec:
   programRef:
     name: pu-program-{{ .Values.stage }}-{{ .Values.region }}
   stack: ediri/pu-program-{{ .Values.stage }}-{{ .Values.region }}/{{ .Values.stage }}
+{{- end }}
