@@ -5,5 +5,5 @@ metadata:
 spec:
   forProvider:
     name: cp-test
-    description: A project to represent test resources
+    description: A project to represent test resources via Crossplane
     environment: development2

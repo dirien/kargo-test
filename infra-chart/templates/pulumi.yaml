@@ -6,7 +6,7 @@ program:
   resources:
     do_project:
       properties:
-        description: A project to represent test resources.
+        description: A project to represent test resources via Pulumi
         environment: development2
         name: test-stage
       type: digitalocean:Project
