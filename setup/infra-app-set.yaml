@@ -30,7 +30,7 @@ spec:
         ref: values
       destination:
         server: https://kubernetes.default.svc
-        namespace: default
+        namespace: cd-summit-demo-{{stage}}
       syncPolicy:
         automated:
           prune: true

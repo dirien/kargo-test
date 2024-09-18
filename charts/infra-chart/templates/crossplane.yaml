@@ -1,9 +1,9 @@
 apiVersion: project.digitalocean.crossplane.io/v1alpha1
 kind: Project
 metadata:
-  name: do-project
+  name: do-project-{{ .Values.stage }}-{{ .Values.region }}
 spec:
   forProvider:
-    name: cp-test
+    name: cp-{{ .Values.stage }}-{{ .Values.region }}
     description: A project to represent test resources via Crossplane
     environment: development2
