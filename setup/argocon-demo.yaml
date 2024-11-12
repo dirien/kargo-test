@@ -1,0 +1,230 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  name: argocon-demo
+---
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: kargo-demo-repo
+  namespace: argocon-demo
+  labels:
+    kargo.akuity.io/cred-type: git
+stringData:
+  repoURL: "https://github.com/dirien/kargo-test.git"
+  username: "dirien"
+  password: "xxx"
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: infra-chart-warehouse
+  namespace: argocon-demo
+spec:
+  freightCreationPolicy: Automatic
+  interval: 30s
+  subscriptions:
+  - chart:
+      discoveryLimit: 20
+      name: infra-chart
+      repoURL: https://dirien.github.io/kargo-test/
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: test
+  namespace: argocon-demo
+spec:
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: git-clone
+        config:
+          repoURL: https://github.com/dirien/kargo-test.git
+          checkout:
+          - branch: main
+            create: true
+            path: ./out
+      - uses: helm-update-chart
+        config:
+          path: ./out/stages/test
+          charts:
+          - repository: https://dirien.github.io/kargo-test/
+            name: infra-chart
+      - uses: git-commit
+        as: commit
+        config:
+          path: ./out
+          messageFromSteps:
+          - update-image
+      - uses: git-push
+        config:
+          path: ./out
+          targetBranch: main
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: infra-chart-warehouse
+    sources:
+      direct: true
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: uat
+  namespace: argocon-demo
+spec:
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: git-clone
+        config:
+          repoURL: https://github.com/dirien/kargo-test.git
+          checkout:
+          - branch: main
+            create: true
+            path: ./out
+      - uses: helm-update-chart
+        config:
+          path: ./out/stages/uat
+          charts:
+          - repository: https://dirien.github.io/kargo-test/
+            name: infra-chart
+      - uses: git-commit
+        as: commit
+        config:
+          path: ./out
+          messageFromSteps:
+          - update-image
+      - uses: git-push
+        config:
+          path: ./out
+          targetBranch: main
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: infra-chart-warehouse
+    sources:
+      stages:
+      - test
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-nyc
+  namespace: argocon-demo
+spec:
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: git-clone
+        config:
+          repoURL: https://github.com/dirien/kargo-test.git
+          checkout:
+          - branch: main
+            create: true
+            path: ./out
+      - uses: helm-update-chart
+        config:
+          path: ./out/stages/prod-nyc
+          charts:
+          - repository: https://dirien.github.io/kargo-test/
+            name: infra-chart
+      - uses: git-commit
+        as: commit
+        config:
+          path: ./out
+          messageFromSteps:
+          - update-image
+      - uses: git-push
+        config:
+          path: ./out
+          targetBranch: main
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: infra-chart-warehouse
+    sources:
+      stages:
+      - uat
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-ams
+  namespace: argocon-demo
+spec:
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: git-clone
+        config:
+          repoURL: https://github.com/dirien/kargo-test.git
+          checkout:
+          - branch: main
+            create: true
+            path: ./out
+      - uses: helm-update-chart
+        config:
+          path: ./out/stages/prod-ams
+          charts:
+          - repository: https://dirien.github.io/kargo-test/
+            name: infra-chart
+      - uses: git-commit
+        as: commit
+        config:
+          path: ./out
+          messageFromSteps:
+          - update-image
+      - uses: git-push
+        config:
+          path: ./out
+          targetBranch: main
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: infra-chart-warehouse
+    sources:
+      stages:
+      - prod-nyc
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod-lon
+  namespace: argocon-demo
+spec:
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: git-clone
+        config:
+          repoURL: https://github.com/dirien/kargo-test.git
+          checkout:
+          - branch: main
+            create: true
+            path: ./out
+      - uses: helm-update-chart
+        config:
+          path: ./out/stages/prod-lon
+          charts:
+          - repository: https://dirien.github.io/kargo-test/
+            name: infra-chart
+      - uses: git-commit
+        as: commit
+        config:
+          path: ./out
+          messageFromSteps:
+          - update-image
+      - uses: git-push
+        config:
+          path: ./out
+          targetBranch: main
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: infra-chart-warehouse
+    sources:
+      stages:
+      - prod-nyc
