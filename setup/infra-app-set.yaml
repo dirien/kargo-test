@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: cd-summit-demo
+  name: demo
   namespace: argocd
 spec:
   ignoreApplicationDifferences:
@@ -15,9 +15,9 @@ spec:
       - path: stages/*
   template:
     metadata:
-      name: cd-summit-demo-{{path.basename}}
+      name: demo-{{path.basename}}
       annotations:
-        kargo.akuity.io/authorized-stage: cd-summit-demo:*
+        kargo.akuity.io/authorized-stage: demo:*
     spec:
       project: default
       source:
@@ -29,7 +29,7 @@ spec:
           - values.yaml
       destination:
         server: https://kubernetes.default.svc
-        namespace: default #cd-summit-demo-{{path.basename}}
+        namespace: default
       syncPolicy:
         automated:
           prune: true
