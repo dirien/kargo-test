@@ -5,14 +5,14 @@ metadata:
   name: pu-program-{{ .Values.stage }}-{{ .Values.region }}
 program:
   resources:
-    golang-sample:
+    app:
       type: digitalocean:App
       properties:
         spec:
-          name: golang-sample-{{ .Values.stage }}-{{ .Values.region }}
+          name: app-{{ .Values.stage }}-{{ .Values.region }}
           region: {{ .Values.region }}
           services:
-          - name: go-service-{{ .Values.stage }}-{{ .Values.region }}
+          - name: app-service-{{ .Values.stage }}-{{ .Values.region }}
             instanceCount: 1
             instanceSizeSlug: "apps-s-1vcpu-1gb"
             git:

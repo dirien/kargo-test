@@ -2,14 +2,14 @@
 apiVersion: digitalocean.digitalocean.crossplane.io/v1alpha1
 kind: App
 metadata:
-  name: golang-sample-{{ .Values.stage }}-{{ .Values.region }}
+  name: app-{{ .Values.stage }}-{{ .Values.region }}
 spec:
   forProvider:
     spec:
-    - name: golang-sample-{{ .Values.stage }}-{{ .Values.region }}
+    - name: app-{{ .Values.stage }}-{{ .Values.region }}
       region: {{ .Values.region }}
       service:
-      - name: go-service-{{ .Values.stage }}-{{ .Values.region }}
+      - name: app-service-{{ .Values.stage }}-{{ .Values.region }}
         instanceCount: 1
         instanceSizeSlug: "apps-s-1vcpu-1gb"
         git:
