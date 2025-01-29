@@ -6,4 +6,4 @@ iac:
   crossplane:
     enabled: true
 app:
-  repo: https://github.com/digitalocean/sample-vuejs
+  repo: https://github.com/digitalocean/sample-golang.git
