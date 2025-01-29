@@ -7,5 +7,5 @@ infra-chart:
     crossplane:
       enabled: false
   app:
-    repo: https://github.com/digitalocean/sample-vuejs
+    repo: https://github.com/digitalocean/sample-golang.git
 
