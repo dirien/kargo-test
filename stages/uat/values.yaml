@@ -6,3 +6,5 @@ infra-chart:
       enabled: false
     crossplane:
       enabled: true
+  app:
+    repo: https://github.com/digitalocean/sample-vuejs
