@@ -35,14 +35,14 @@ EOF
 ##### Install Kargo
 
 ```shell
-helm install cert-manager cert-manager \
+helm upgrade -i cert-manager cert-manager \
   --repo https://charts.jetstack.io \
   --namespace cert-manager \
   --create-namespace \
   --set crds.enabled=true \
   --wait
 
-helm install argocd argo-cd \
+helm upgrade -i argocd argo-cd \
   --repo https://argoproj.github.io/argo-helm \
   --namespace argocd \
   --create-namespace \
@@ -57,13 +57,13 @@ helm install argocd argo-cd \
   --set "server.extensions.extensionList[0].env[0].value=https://github.com/argoproj-labs/rollout-extension/releases/download/v0.3.4/extension.tar"
   --wait
 
-helm install argo-rollouts argo-rollouts \
+helm upgrade -i argo-rollouts argo-rollouts \
   --repo https://argoproj.github.io/argo-helm \
   --create-namespace \
   --namespace argo-rollouts \
   --wait
 
-helm install kargo \
+helm upgrade -i kargo \
   oci://ghcr.io/akuity/kargo-charts/kargo \
   --namespace kargo \
   --create-namespace \
@@ -140,8 +140,8 @@ helm upgrade -i  pulumi-kubernetes-operator oci://ghcr.io/pulumi/helm-charts/pul
 #### Usage
 
 ```shell
-kubctl apply -f setup/kargo-demo.yaml # Create the Kargo demo setup
-kubctl apply -f setup/infra-app-set.yaml # Create the Argo CD demo setup
+kubectl apply -f setup/kargo-demo.yaml # Create the Kargo demo setup
+kubectl apply -f setup/infra-app-set.yaml # Create the Argo CD demo setup
 ```
 
 Open the Kargo dashboard at https://localhost:31444 and the Argo CD dashboard at https://localhost:31443
