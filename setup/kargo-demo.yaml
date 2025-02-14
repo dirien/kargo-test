@@ -39,29 +39,11 @@ spec:
   promotionTemplate:
     spec:
       steps:
-      - uses: git-clone
-        config:
-          repoURL: https://github.com/dirien/kargo-test.git
-          checkout:
-          - branch: main
-            create: true
-            path: ./out
-      - uses: helm-update-chart
-        config:
-          path: ./out/stages/test
-          charts:
-          - repository: https://dirien.github.io/kargo-test/
-            name: infra-chart
-      - uses: git-commit
-        as: commit
-        config:
-          path: ./out
-          messageFromSteps:
-          - update-image
-      - uses: git-push
-        config:
-          path: ./out
-          targetBranch: main
+      - task:
+          name: promote
+        vars:
+        - name: stageFolder
+          value: stages/test
   requestedFreight:
   - origin:
       kind: Warehouse
@@ -78,29 +60,11 @@ spec:
   promotionTemplate:
     spec:
       steps:
-      - uses: git-clone
-        config:
-          repoURL: https://github.com/dirien/kargo-test.git
-          checkout:
-          - branch: main
-            create: true
-            path: ./out
-      - uses: helm-update-chart
-        config:
-          path: ./out/stages/uat
-          charts:
-          - repository: https://dirien.github.io/kargo-test/
-            name: infra-chart
-      - uses: git-commit
-        as: commit
-        config:
-          path: ./out
-          messageFromSteps:
-          - update-image
-      - uses: git-push
-        config:
-          path: ./out
-          targetBranch: main
+      - task:
+          name: promote
+        vars:
+        - name: stageFolder
+          value: stages/uat
   requestedFreight:
   - origin:
       kind: Warehouse
@@ -118,29 +82,11 @@ spec:
   promotionTemplate:
     spec:
       steps:
-      - uses: git-clone
-        config:
-          repoURL: https://github.com/dirien/kargo-test.git
-          checkout:
-          - branch: main
-            create: true
-            path: ./out
-      - uses: helm-update-chart
-        config:
-          path: ./out/stages/prod-nyc
-          charts:
-          - repository: https://dirien.github.io/kargo-test/
-            name: infra-chart
-      - uses: git-commit
-        as: commit
-        config:
-          path: ./out
-          messageFromSteps:
-          - update-image
-      - uses: git-push
-        config:
-          path: ./out
-          targetBranch: main
+      - task:
+          name: promote
+        vars:
+        - name: stageFolder
+          value: stages/prod-nyc
   requestedFreight:
   - origin:
       kind: Warehouse
@@ -158,29 +104,11 @@ spec:
   promotionTemplate:
     spec:
       steps:
-      - uses: git-clone
-        config:
-          repoURL: https://github.com/dirien/kargo-test.git
-          checkout:
-          - branch: main
-            create: true
-            path: ./out
-      - uses: helm-update-chart
-        config:
-          path: ./out/stages/prod-ams
-          charts:
-          - repository: https://dirien.github.io/kargo-test/
-            name: infra-chart
-      - uses: git-commit
-        as: commit
-        config:
-          path: ./out
-          messageFromSteps:
-          - update-image
-      - uses: git-push
-        config:
-          path: ./out
-          targetBranch: main
+      - task:
+          name: promote
+        vars:
+        - name: stageFolder
+          value: stages/prod-ams
   requestedFreight:
   - origin:
       kind: Warehouse
@@ -198,29 +126,11 @@ spec:
   promotionTemplate:
     spec:
       steps:
-      - uses: git-clone
-        config:
-          repoURL: https://github.com/dirien/kargo-test.git
-          checkout:
-          - branch: main
-            create: true
-            path: ./out
-      - uses: helm-update-chart
-        config:
-          path: ./out/stages/prod-lon
-          charts:
-          - repository: https://dirien.github.io/kargo-test/
-            name: infra-chart
-      - uses: git-commit
-        as: commit
-        config:
-          path: ./out
-          messageFromSteps:
-          - update-image
-      - uses: git-push
-        config:
-          path: ./out
-          targetBranch: main
+      - task:
+          name: promote
+        vars:
+        - name: stageFolder
+          value: stages/prod-lon
   requestedFreight:
   - origin:
       kind: Warehouse
@@ -228,3 +138,47 @@ spec:
     sources:
       stages:
       - prod-nyc
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: PromotionTask
+metadata:
+  name: promote
+  namespace: argocon-demo
+spec:
+  vars:
+  - name: repoURL
+    value: https://github.com/dirien/kargo-test.git
+  - name: helmRepoURL
+    value: https://dirien.github.io/kargo-test/
+  - name: branch
+    value: main
+  - name: stageFolder
+    value: dev
+  - name: chartName
+    value: infra-chart
+  steps:
+  - uses: git-clone
+    as: clone
+    config:
+      repoURL: ${{ vars.repoURL }}
+      checkout:
+      - branch: ${{ vars.branch }}
+        create: true
+        path: ./out
+  - uses: helm-update-chart
+    as: update-helm-chart-dependency
+    config:
+      path: ./out/${{ vars.stageFolder }}
+      charts:
+      - repository: ${{ vars.helmRepoURL }}
+        name: ${{ vars.chartName }}
+  - uses: git-commit
+    as: commit
+    config:
+      path: ./out
+      messageFromSteps:
+      - update-image
+  - uses: git-push
+    config:
+      path: ./out
+      targetBranch: ${{ vars.branch }}
