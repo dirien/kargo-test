@@ -1,6 +1,6 @@
 dependencies:
 - name: infra-chart
   repository: https://dirien.github.io/kargo-test/
-  version: 0.1.11
-digest: sha256:640338b88bb58f42bbd9423b0204681363b8a86e68a9e1b67cd3b45ca07d392a
-generated: "2025-02-13T19:18:18.421874804Z"
+  version: 0.1.12
+digest: sha256:00889fb383bc1d6aef4e611594e15ff30f84abccc67f075e98a6578c7294d281
+generated: "2025-02-14T09:37:58.291520553Z"
