@@ -1,4 +1,22 @@
 {{- if .Values.iac.pulumi.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pulumi-{{ .Values.stage }}-{{ .Values.region }}-sa
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pulumi-{{ .Values.stage }}-{{ .Values.region }}-auth-delegator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  namespace: {{.Release.Namespace}}
+  name: pulumi-{{ .Values.stage }}-{{ .Values.region }}-sa
+---
 apiVersion: pulumi.com/v1
 kind: Program
 metadata:
@@ -24,8 +42,13 @@ kind: Stack
 metadata:
   name: pu-stack-{{ .Values.stage }}-{{ .Values.region }}
 spec:
+  serviceAccountName: pulumi-{{ .Values.stage }}-{{ .Values.region }}-sa
   destroyOnFinalize: true
   envRefs:
+    PULUMI_ACCESS_TOKEN:
+      type: Env
+      env:
+        name: PULUMI_ACCESS_TOKEN
     DIGITALOCEAN_TOKEN:
       env:
         name: DIGITALOCEAN_TOKEN
@@ -33,4 +56,7 @@ spec:
   programRef:
     name: pu-program-{{ .Values.stage }}-{{ .Values.region }}
   stack: ediri/pu-program-{{ .Values.stage }}-{{ .Values.region }}/{{ .Values.stage }}
+  workspaceTemplate:
+    spec:
+      image: pulumi/pulumi:3.152.0-nonroot
 {{- end }}
