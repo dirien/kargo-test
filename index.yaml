@@ -2,6 +2,15 @@ apiVersion: v1
 entries:
   infra-chart:
   - apiVersion: v2
+    created: "2025-02-26T12:21:28.458948822Z"
+    description: A Helm chart for Kubernetes
+    digest: b40c5d745fb48106ace6c5b4abf05163afbe06673cb2bc1c4255c4a6c7a13bf7
+    name: infra-chart
+    type: application
+    urls:
+    - https://github.com/dirien/kargo-test/releases/download/0.2.0-helm/infra-chart-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     created: "2025-02-13T20:45:02.482884226Z"
     description: A Helm chart for Kubernetes
     digest: 3bca6986c3e9d7749f3a875a83b4fc0ea6fa40863f14e368f1dc4b4376b33fb4
@@ -118,4 +127,4 @@ entries:
     urls:
     - https://github.com/dirien/kargo-test/releases/download/0.1.0-helm/infra-chart-0.1.0.tgz
     version: 0.1.0
-generated: "2025-02-13T20:45:02.482964294Z"
+generated: "2025-02-26T12:21:28.45905525Z"
