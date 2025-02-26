@@ -172,12 +172,12 @@ spec:
       charts:
       - repository: ${{ vars.helmRepoURL }}
         name: ${{ vars.chartName }}
+        version: ${{ chartFrom(vars.helmRepoURL,vars.chartName).Version }}
   - uses: git-commit
     as: commit
     config:
       path: ./out
-      messageFromSteps:
-      - update-image
+      message: ${{ task.outputs['update-helm-chart-dependency'].commitMessage }}
   - uses: git-push
     config:
       path: ./out
